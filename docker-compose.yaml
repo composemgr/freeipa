@@ -1,0 +1,50 @@
+# nginx proxy address - https://172.17.0.1:9444
+
+name: freeipa
+x-logging: &default-logging
+  options:
+    max-size: '5m'
+    max-file: '1'
+  driver: json-file
+
+services:
+  app:
+    image: freeipa/freeipa-server:latest
+    container_name: freeipa-app
+    domainname: ${BASE_DOMAIN_NAME:-}
+    hostname: ${BASE_HOST_NAME:-$HOSTNAME}
+    restart: always
+    pull_policy: always
+    privileged: true
+    logging: *default-logging
+    environment:
+      TZ: ${TZ:-America/New_York}
+      VIRTUAL_PORT: 443
+      VIRTUAL_PROTO: https
+      VIRTUAL_HOST: ${BASE_HOST_NAME:-$HOSTNAME}
+      IPA_SERVER_IP: 127.0.0.1
+      IPA_SERVER_HOSTNAME: ${BASE_HOST_NAME:-$HOSTNAME}
+      IPA_SERVER_INSTALL_OPTS: -U -r
+      PASSWORD: ${APP_ADMIN_PASS:-changeme_admin_password}
+    ports:
+      - '88:88/tcp'
+      - '88:88/udp'
+      - '389:389/tcp'
+      - '464:464/tcp'
+      - '636:636/tcp'
+      - '464:464/udp'
+      - '123:123/udp'
+      - '172.17.0.1:8097:80'
+      - '172.17.0.1:9444:443'
+    volumes:
+      - './rootfs/data/freeipa:/data:z'
+      - '/sys/fs/cgroup:/sys/fs/cgroup:ro'
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0
+    networks:
+      - freeipa
+
+networks:
+  freeipa:
+    name: freeipa
+    external: false
