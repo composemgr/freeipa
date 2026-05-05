@@ -46,7 +46,7 @@ See `docker-compose.yaml` for complete list of configurable options.
 
 ## 📂 Volumes
 
-- `./rootfs/data/freeipa` - Data storage
+- `./volumes/data/freeipa` - Data storage
 
 ## 🔐 Security
 
