@@ -11,8 +11,8 @@ services:
   app:
     image: freeipa/freeipa-server:latest
     container_name: freeipa-app
-    domainname: ${BASE_DOMAIN_NAME:-}
-    hostname: ${BASE_HOST_NAME:-$HOSTNAME}
+    domainname: ${BASE_DOMAIN_NAME:-example.com}
+    hostname: ${BASE_HOST_NAME:-freeipa}
     restart: always
     pull_policy: always
     privileged: true
@@ -21,10 +21,10 @@ services:
       TZ: ${TZ:-America/New_York}
       VIRTUAL_PORT: 443
       VIRTUAL_PROTO: https
-      VIRTUAL_HOST: ${BASE_HOST_NAME:-$HOSTNAME}
+      VIRTUAL_HOST: ${BASE_HOST_NAME:-freeipa}
       IPA_SERVER_IP: 127.0.0.1
-      IPA_SERVER_HOSTNAME: ${BASE_HOST_NAME:-$HOSTNAME}
-      IPA_SERVER_INSTALL_OPTS: -U -r
+      IPA_SERVER_HOSTNAME: ${BASE_HOST_NAME:-freeipa}
+      IPA_SERVER_INSTALL_OPTS: -U -r ${BASE_DOMAIN_NAME:-example.com} --no-ntp
       PASSWORD: ${APP_ADMIN_PASS:-changeme_admin_password}
     ports:
       - '88:88/tcp'
