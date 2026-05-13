@@ -1,4 +1,4 @@
-# nginx proxy address - https://172.17.0.1:9444
+# nginx proxy address - http://172.17.0.1:9444
 
 name: freeipa
 x-logging: &default-logging
